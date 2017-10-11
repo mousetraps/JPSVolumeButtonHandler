@@ -63,7 +63,7 @@ static CGFloat minVolume                    = 0.01f; // 0.062f;
     self.disableSystemVolumeHandler = disableSystemVolumeHandler;
 
     // There is a delay between setting the volume view before the system actually disables the HUD
-    [self performSelector:@selector(setupSession) withObject:nil afterDelay:1];
+    [self performSelector:@selector(setupSession) withObject:nil afterDelay:2];
 }
 
 - (void)stopHandler {
