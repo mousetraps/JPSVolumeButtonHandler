@@ -59,7 +59,6 @@ static CGFloat minVolume                    = 0.01f; // 0.062f;
 }
 
 - (void)startHandler:(BOOL)disableSystemVolumeHandler {
-    [self setupSession];
     self.volumeView.hidden = NO; // Start visible to prevent changes made during setup from showing default volume
     self.disableSystemVolumeHandler = disableSystemVolumeHandler;
 
