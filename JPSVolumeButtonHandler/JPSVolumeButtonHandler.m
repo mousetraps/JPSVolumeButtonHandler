@@ -27,6 +27,7 @@ static CGFloat minVolume                    = 0.001f; // 0.062f;
 @property (nonatomic, assign) BOOL             disableSystemVolumeHandler;
 @property (nonatomic, assign) BOOL             isAdjustingInitialVolume;
 @property (nonatomic, assign) BOOL             exactJumpsOnly;
+@property (nonatomic, assign) BOOL             isStartFinished;
 
 @end
 
@@ -59,14 +60,21 @@ static CGFloat minVolume                    = 0.001f; // 0.062f;
 }
 
 - (void)startHandler:(BOOL)disableSystemVolumeHandler {
+    _isStartFinished = NO;
     self.volumeView.hidden = NO; // Start visible to prevent changes made during setup from showing default volume
     self.disableSystemVolumeHandler = disableSystemVolumeHandler;
 
     // There is a delay between setting the volume view before the system actually disables the HUD
     [self performSelector:@selector(setupSession) withObject:nil afterDelay:2];
 }
-
 - (void)stopHandler {
+    if (_isStartFinished){
+        [self realStop];
+        return;
+    }
+    [self performSelector:@selector(realStop) withObject:nil afterDelay:1];
+}
+- (void)realStop {
     if (!self.isStarted) {
         // Prevent stop process when already stop
         return;
@@ -88,6 +96,7 @@ static CGFloat minVolume                    = 0.001f; // 0.062f;
 - (void)setupSession {
     if (self.isStarted){
         // Prevent setup twice
+        _isStartFinished = YES;
         return;
     }
     
@@ -133,6 +142,7 @@ static CGFloat minVolume                    = 0.001f; // 0.062f;
                                                object:nil];
 
     self.volumeView.hidden = !self.disableSystemVolumeHandler;
+    _isStartFinished = YES;
 }
 
 - (void) useExactJumpsOnly:(BOOL)enabled{
